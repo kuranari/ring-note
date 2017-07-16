@@ -1,0 +1,11 @@
+### https://raw.github.com/github/gitignore/77e8071b0fd93b44143a03b1c55882512036ae7e/haskell.gitignore
+
+dist
+cabal-dev
+*.o
+*.hi
+*.chi
+*.chs.h
+.virthualenv
+
+.stack-work
