@@ -8,11 +8,13 @@ import System.IO (hFlush, stdout)
 import System.Console.ANSI
 import System.Console.Readline (readline)
 import Data.Algorithm.Diff (getGroupedDiff, Diff(First, Second, Both))
+import Data.Function (on)
 
 sentences :: [(String, String)]
-sentences = [("これはリンゴです。", "This is an apple.")
-            ,("彼は東京に住んでいます。", "He lives in Tokyo.")
-            ,("これらの本はとても高い", "These books are very expensive.")
+sentences = [("私はペンを持っています。", "I have a pen.")
+            ,("私はリンゴを持っています", "I have an apple.")
+            ,("私はペンを持っています", "I have a pen.")
+            ,("私はパイナップルを持っています", "I have a pineapple.")
             ]
 
 examination :: IO ()
@@ -32,20 +34,23 @@ putResult expected actual = do
   else do
     putStrLn "====="
     putStrLn expected
-    mapM_ showDiff $ getGroupedDiff actual expected
+    mapM_ showDiff $ (getGroupedDiff `on` words) actual expected
     putStrLn ""
   putStrLn ""
 
-showDiff :: Diff String -> IO ()
+showDiff :: Diff [String] -> IO ()
 showDiff (First x) = do
   setSGR [SetUnderlining SingleUnderline]
   setSGR [SetColor Foreground Dull Red]
-  putStr x
+  putStr $ unwords x
   setSGR [Reset]
+  putStr " "
 showDiff (Second x) = do
   setSGR [SetUnderlining SingleUnderline]
   setSGR [SetColor Foreground Dull Green]
-  putStr x
+  putStr $ unwords x
   setSGR [Reset]
+  putStr " "
 showDiff (Both x _) = do
-  putStr x
+  putStr $ unwords x
+  putStr " "
